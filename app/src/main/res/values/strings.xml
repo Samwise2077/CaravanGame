@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="card1">TODO</string>
+    <string name="arrow1">TODO</string>
+    <string name="arrow2">TODO</string>
+    <string name="h3">TODO</string>
+    <string name="d9">TODO</string>
+    <string name="d4">TODO</string>
+    <string name="c5">TODO</string>
+    <string name="b6">TODO</string>
+    <string name="c8">TODO</string>
+    <string name="c7">TODO</string>
+
+    <string name="c82">TODO</string>
+    <string name="cj">TODO</string>
+    <string name="c3">TODO</string>
+
+
+    <string name="c2">TODO</string>
+    <string name="jb">TODO</string>
+    <string name="c6">TODO</string>
+    <string name="d2">TODO</string>
+
+    <string name="s2">TODO</string>
+    <string name="achievements">ДОСТИЖЕНИЯ</string>
+    <string name="settings">НАСТРОЙКИ</string>
+    <string name="startGame">НАЧАТЬ ИГРУ</string>
+</resources>
