@@ -25,4 +25,5 @@
     <string name="achievements">ДОСТИЖЕНИЯ</string>
     <string name="settings">НАСТРОЙКИ</string>
     <string name="startGame">НАЧАТЬ ИГРУ</string>
+    <string name="cardsRemain">Оставшиеся карты: 36</string>
 </resources>

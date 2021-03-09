@@ -1,11 +1,15 @@
 package com.example.myapplication;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -13,6 +17,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,11 +25,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DeskSelection extends AppCompatActivity {
+public class DeckSelection extends AppCompatActivity{
     private ImageView c2, c3, c4, c5, c6, c7, c8, c9, c10, b2, b3, b4, b5, b6, b7, b8, b9, b10, d2, d3, d4, d5, d6, d7, d8, d9, d10,
             h2, h3, h4, h5, h6, h7, h8, h9, h10, s2, s3, s4, s5, s6, s7, s8, s9, s10, sq, hq, dq, cq, sj, dj, hj, cj, ck, dk, hk, sk,
             sa, da, ha, ca, arrowRight, arrowLeft, back;
@@ -33,28 +40,78 @@ public class DeskSelection extends AppCompatActivity {
             backh2, backh3, backh4, backh5, backh6, backh7, backh8, backh9, backh10, backs2, backs3, backs4, backs5, backs6, backs7, backs8,
             backs9, backs10, backsq, backhq, backdq, backcq, backsj, backdj, backhj,backcj, backck, backdk,  backhk, backsk,
             backsa, backda, backha, backca;
-    public List<ImageView> cards;
-    public List<ImageView> backs;
+    public ArrayList<Integer> deck = new ArrayList<>();
+    public List<ImageView> cards  = new ArrayList<>();
+    public List<ImageView> backs = new ArrayList<>();
     volatile static int counter = 0;
     private ViewGroup mMoveLayout;
     private int mX;
+    private Button btnStartGame, btnStartGame2;
     private int mY;
-    private TextView cardsRemain;
+    private static int numberOfRemainingCards = 52;
+    public List getDeck()
+    {
+        return deck;
+    }
+    class MyOnClickListener implements View.OnClickListener
+    {
+        DeckSelection ds = new DeckSelection();
+        ImageView iv, back;
+        private List<ImageView> copy = ds.cards;
+        private boolean presence;
+        public MyOnClickListener(ImageView iv, ImageView back, boolean presence) {
+            this.iv = iv;
+            this.back = back;
+            this.presence = presence;
+        }
+        @Override
+        public void onClick(View v)
+        {
+            if(numberOfRemainingCards == 0 && presence) {
+                return;
+            }
+            iv.setVisibility(View.INVISIBLE);
+            RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams)  iv.getLayoutParams();
+            RelativeLayout.LayoutParams lParams2 = (RelativeLayout.LayoutParams)  back.getLayoutParams();
+            ds.update( iv, lParams2, true);
+            ds.update(back, lParams, true);
+            if(presence)
+            {
+                update("Оставшиеся карты: " + --numberOfRemainingCards);
+                ds.deck.add( iv.getId());
+                Log.d("number", "" + numberOfRemainingCards);
+                if(numberOfRemainingCards == 30);
+                {
+                    btnStartGame.setAlpha(1f);
+                }
+            }
+            else {
+                if(numberOfRemainingCards == 52) {}
+                else{
+                    update("Оставшиеся карты: " + ++numberOfRemainingCards);
+                }
+                Log.d("number", "" + numberOfRemainingCards);
+                ds.deck.remove(back);
+                if(numberOfRemainingCards == 1)
+                {
+                    btnStartGame.setAlpha(0.2f);
+
+                }
+            }
+        }
+    }
+    private TextView cardsRemain ;
     int i = 0;
     View.OnClickListener clickListener;
-    public void setNumber(int n)
-    {
-        cardsRemain.setText("Оставшиеся карты: " + n);
-    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.deck_selection);
         Display display = getWindowManager().getDefaultDisplay();
         Point p = new Point();
         display.getSize(p);
-
         cardsRemain = findViewById(R.id.cardsRemain);
-        setContentView(R.layout.desk_selection);
+        btnStartGame = findViewById(R.id.start);
         mMoveLayout = (ViewGroup) findViewById(R.id.move);
         c2 = findViewById(R.id.c2); c3 = findViewById(R.id.c3); c4 = findViewById(R.id.c4); c5 = findViewById(R.id.c5);
         c6 = findViewById(R.id.c6); c7=  findViewById(R.id.c7); c8 = findViewById(R.id.c8); c9 = findViewById(R.id.c9);
@@ -93,7 +150,6 @@ public class DeskSelection extends AppCompatActivity {
         Log.d("check", "" + cards.contains(sa));
         clickListener = new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("ids","" + v.getId());
                 cards.get(counter).setVisibility(View.INVISIBLE);
                 RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams)  cards.get(counter).getLayoutParams();
                 update( cards.get(counter), lParams, false);
@@ -102,19 +158,30 @@ public class DeskSelection extends AppCompatActivity {
         };
         for(int i = 0; i < cards.size(); i++)
         {
-            MyOnClickListener myOnClickListener = new MyOnClickListener(cards.get(counter), backs.get(counter));
+            MyOnClickListener myOnClickListener = new MyOnClickListener(cards.get(counter), backs.get(counter), true);
             cards.get(counter).setOnClickListener(myOnClickListener);
             counter++;
         }
         counter = 0;
         for(int i = 0; i < cards.size(); i++)
         {
-            MyOnClickListener myOnClickListener = new MyOnClickListener( backs.get(counter), cards.get(counter));
+            MyOnClickListener myOnClickListener = new MyOnClickListener( backs.get(counter), cards.get(counter), false);
             backs.get(counter).setOnClickListener(myOnClickListener);
             counter++;
         }
         counter = 0;
         RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) d4.getLayoutParams();
+        btnStartGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btnStartGame.getAlpha() == 1f) {
+                    Intent i = new Intent(DeckSelection.this, Game.class);
+                    i.putIntegerArrayListExtra("Array",  deck);
+                    startActivity(i);
+                }
+                else{}
+            }
+        });
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,10 +190,9 @@ public class DeskSelection extends AppCompatActivity {
                     mp.setDataSource("O:/Music/sliding.mp3");
                     mp.prepare();
                     mp.start();
-
                 }catch(Exception e){e.printStackTrace();}
                 Log.d("","cards.size = " + cards.size());
-                Thread t0, t1, t2, t3, t_1, t_2, t_3, t_4, t4;
+                Thread t0, t1, t2, t3, t_1, t_2, t_3, t_4, t4, t0t, t1t, t2t, t3t, t_1t, t_2t, t_3t, t_4t, t4t;
                 Display display = getWindowManager().getDefaultDisplay();
                 RelativeLayout.LayoutParams lParams1 = new RelativeLayout.LayoutParams(110, 200),
                 lParams_1 = new RelativeLayout.LayoutParams(110, 200),
@@ -136,24 +202,28 @@ public class DeskSelection extends AppCompatActivity {
                 lParams_3 = new RelativeLayout.LayoutParams(110, 200),
                 lParams_4 = new RelativeLayout.LayoutParams(110, 200),
                 lParams4 = new RelativeLayout.LayoutParams(110, 200);
-
                 RelativeLayout.LayoutParams lParams0 = (RelativeLayout.LayoutParams) cards.get(counter).getLayoutParams();
                 int cnt = -1;
                 for(int i = counter - 4; cnt < 8;i++)
                 {
                     Log.d("Карты", "" + i);
                    if ( i < 0 ) i = 52 + i;
-
                     switch (cnt)
                     {
                         case -1:
                             lParams_4 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты-1", "" + cards.get(i % cards.size()));
-                            t_4 = new Thread (new ThreadRight(lParams_4, cards.get(i % cards.size()),"-4",
-                                    (int) TypedValue.applyDimension(
-                                            TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics())) );
-                            t_4.start();
-                            break;
+                                Log.d("Карты-1", "" + cards.get(i % cards.size()));
+                                t_4 = new Thread(new ThreadRight(lParams_4, cards.get(i % cards.size()), "-4",
+                                        (int) TypedValue.applyDimension(
+                                                TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics())));
+                                t_4.start();
+                                lParams_4 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                                t_4t = new Thread(new ThreadRight(lParams_4, backs.get(i % backs.size()), "-4",
+                                        (int) TypedValue.applyDimension(
+                                                TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics())));
+                                t_4t.start();
+                                break;
+
                         case 0:
                             lParams_3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
                             Log.d("Карты", "" + cards.get(i % cards.size()));
@@ -161,6 +231,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 117, getResources().getDisplayMetrics())));
                             t_3.start();
+                            lParams_3 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t_3t = new Thread (new ThreadRight(lParams_3, backs.get(i % backs.size()), "-3",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 117, getResources().getDisplayMetrics())));
+                            t_3t.start();
                             break;
                         case 1:
                             lParams_2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -169,6 +244,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 231, getResources().getDisplayMetrics())));
                             t_2.start();
+                            lParams_2 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t_2t = new Thread (new ThreadRight(lParams_2, backs.get(i % backs.size()), "-2",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 231, getResources().getDisplayMetrics())));
+                            t_2t.start();
                             break;
                         case 2:
                             lParams_1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -177,6 +257,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 338, getResources().getDisplayMetrics())));
                             t_1.start();
+                            lParams_1 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t_1t = new Thread (new ThreadRight(lParams_1, backs.get(i % backs.size()), "-1",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 338, getResources().getDisplayMetrics())));
+                            t_1t.start();
                             break;
                         case 3:
                             lParams0 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -186,6 +271,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 450, getResources().getDisplayMetrics())));
                             t0.start();
+                            lParams0 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t0t = new Thread (new ThreadRight(lParams0, backs.get(i % backs.size()), "0",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 450, getResources().getDisplayMetrics())));
+                            t0t.start();
                             break;
                         case 4:
                             lParams1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -194,6 +284,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 563, getResources().getDisplayMetrics())));
                             t1.start();
+                            lParams1 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t1t = new Thread (new ThreadRight(lParams1, backs.get(i % cards.size()), "1",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 563, getResources().getDisplayMetrics())));
+                            t1t.start();
                             break;
                         case 5:
                             lParams2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -202,6 +297,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 673, getResources().getDisplayMetrics())));
                             t2.start();
+                            lParams2 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t2t = new Thread (new ThreadRight(lParams2, backs.get(i % backs.size()), "2",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 673, getResources().getDisplayMetrics())));
+                            t2t.start();
                             break;
                         case 6:
                             lParams3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -210,24 +310,30 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 800, getResources().getDisplayMetrics())));
                             t3.start();
+                            lParams3 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t3t = new Thread (new ThreadRight(lParams3, backs.get(i % backs.size()), "3",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 800, getResources().getDisplayMetrics())));
+                            t3t.start();
 
                              if(counter == 0) counter = 51;
                             else counter--;
                             break;
                         case 7:
                             lParams4 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-
-
                                 Log.d("Карты7", "" + cards.get(i % cards.size()));
                                 t4 = new Thread(new ThreadRight(lParams4, cards.get(i % cards.size()), "8",
                                         (int) TypedValue.applyDimension(
                                                 TypedValue.COMPLEX_UNIT_DIP, 900, getResources().getDisplayMetrics())));
                                 t4.start();
-
+                            lParams4 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t4t = new Thread(new ThreadRight(lParams4, backs.get(i % backs.size()), "8",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 900, getResources().getDisplayMetrics())));
+                            t4t.start();
                     }
                     cnt++;
-                    }
-
+                }
             }
         });
         arrowLeft.setOnClickListener(new View.OnClickListener() {
@@ -240,7 +346,7 @@ public class DeskSelection extends AppCompatActivity {
                     mp.start();
                 }catch(Exception e){e.printStackTrace();}
                 Log.d("","cards.size = " + cards.size());
-                Thread t0, t1, t2, t3, t_1, t_2, t_3, t_4, t4;
+                Thread t0, t1, t2, t3, t_1, t_2, t_3, t_4, t4, t0t, t1t, t2t, t3t, t_1t, t_2t, t_3t, t_4t, t4t;
                 Display display = getWindowManager().getDefaultDisplay();
                 RelativeLayout.LayoutParams lParams1 = new RelativeLayout.LayoutParams(110, 200),
                         lParams_1 = new RelativeLayout.LayoutParams(110, 200),
@@ -265,6 +371,10 @@ public class DeskSelection extends AppCompatActivity {
                             t_4 = new Thread (new  ThreadLeft(lParams_4, cards.get(i % cards.size()),"-4",
                                     -cards.get(i % cards.size()).getWidth()));
                             t_4.start();
+                            lParams_4 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t_4t = new Thread (new  ThreadLeft(lParams_4, backs.get(i % cards.size()),"-4",
+                                    -cards.get(i % backs.size()).getWidth()));
+                            t_4t.start();
                             break;
                         case 0:
                             lParams_3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -273,6 +383,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics())));
                             t_3.start();
+                            lParams_3 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t_3t = new Thread (new ThreadLeft(lParams_3, backs.get(i % backs.size()), "-3",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics())));
+                            t_3t.start();
                             break;
                         case 1:
                             lParams_2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -281,6 +396,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 117, getResources().getDisplayMetrics())));
                             t_2.start();
+                            lParams_2 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t_2t = new Thread (new  ThreadLeft(lParams_2, backs.get(i % backs.size()), "-2",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 117, getResources().getDisplayMetrics())));
+                            t_2t.start();
                             break;
                         case 2:
                             lParams_1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -289,6 +409,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 231, getResources().getDisplayMetrics())));
                             t_1.start();
+                            lParams_1 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t_1t = new Thread (new  ThreadLeft(lParams_1, backs.get(i % backs.size()), "-1",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 231, getResources().getDisplayMetrics())));
+                            t_1t.start();
                             break;
                         case 3:
                             lParams0 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -298,6 +423,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 338, getResources().getDisplayMetrics())));
                             t0.start();
+                            lParams0 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t0t = new Thread (new  ThreadLeft(lParams0, backs.get(i % backs.size()), "0",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 338, getResources().getDisplayMetrics())));
+                            t0t.start();
                             break;
                         case 4:
                             lParams1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -306,6 +436,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 450, getResources().getDisplayMetrics())));
                             t1.start();
+                            lParams1 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t1t = new Thread (new  ThreadLeft(lParams1, backs.get(i % backs.size()), "1",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 450, getResources().getDisplayMetrics())));
+                            t1t.start();
                             break;
                         case 5:
                             lParams2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -314,6 +449,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 563, getResources().getDisplayMetrics())));
                             t2.start();
+                            lParams2 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t2t = new Thread (new  ThreadLeft(lParams2, backs.get(i % backs.size()), "2",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 563, getResources().getDisplayMetrics())));
+                            t2t.start();
                             break;
                         case 6:
                             lParams3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -322,7 +462,11 @@ public class DeskSelection extends AppCompatActivity {
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 673, getResources().getDisplayMetrics())));
                             t3.start();
-
+                            lParams3 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t3 = new Thread (new ThreadLeft(lParams3, backs.get(i % backs.size()), "3",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 673, getResources().getDisplayMetrics())));
+                            t3.start();
                             if(counter == 51) counter = 0;
                             else counter++;
                             break;
@@ -333,10 +477,14 @@ public class DeskSelection extends AppCompatActivity {
                                         (int) TypedValue.applyDimension(
                                                 TypedValue.COMPLEX_UNIT_DIP, 800, getResources().getDisplayMetrics())));
                                 t4.start();
+                            lParams4 = (RelativeLayout.LayoutParams) backs.get(i % backs.size()).getLayoutParams();
+                            t4t = new Thread(new  ThreadLeft(lParams4, backs.get(i % backs.size()), "8",
+                                    (int) TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP, 800, getResources().getDisplayMetrics())));
+                            t4t.start();
                     }
                     cnt++;
                 }
-
             }
         });
     }
@@ -355,6 +503,15 @@ public class DeskSelection extends AppCompatActivity {
                 }
             });
     }
+    public void update(String text)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run () {
+                cardsRemain.setText(text);
+            }
+        });
+    }
     class ThreadRight implements Runnable
     {
         RelativeLayout.LayoutParams params;
@@ -369,7 +526,6 @@ public class DeskSelection extends AppCompatActivity {
             this.position = position;
         }
         public void run() {
-
             Display display = getWindowManager().getDefaultDisplay();
             Point p = new Point();
             display.getSize(p);
@@ -389,9 +545,7 @@ public class DeskSelection extends AppCompatActivity {
                 } */
                 int originParams = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, params.leftMargin, getResources().getDisplayMetrics());
-
                 int cnt = 0;
-
                 while(params.leftMargin < position)
                 {
                     params.leftMargin += (int) TypedValue.applyDimension(
@@ -409,13 +563,27 @@ public class DeskSelection extends AppCompatActivity {
             }
             else if(this.name.equals("-4"))
             {
-
                 params.leftMargin = - iv.getWidth();
                 params.rightMargin = p.x ;
-                params.topMargin = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics());
-                params.bottomMargin = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 52, getResources().getDisplayMetrics());
+                Log.d("*", params.topMargin + " == " + (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics()) + " == " + (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics()));
+                if(params.topMargin == (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics()) || params.topMargin == (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics()) ||
+                        params.topMargin == 329 || params.topMargin == 32){}
+                else if(cards.contains(iv)) {
+                    params.topMargin = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics());
+                    params.bottomMargin = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 52, getResources().getDisplayMetrics());
+                }
+                else {
+                    params.topMargin = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics());
+                    params.bottomMargin = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 251, getResources().getDisplayMetrics());
+                }
                 int originParams = params.leftMargin;
                 int cnt = 0;
                 update(iv, params, true);
@@ -425,7 +593,6 @@ public class DeskSelection extends AppCompatActivity {
                             TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
                     params.rightMargin -= (int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
-
                     try {
                         Thread.sleep(5);
                     } catch (InterruptedException e){}
@@ -433,15 +600,9 @@ public class DeskSelection extends AppCompatActivity {
                     if (cnt % 10 == 0 )
                         cnt++;
                 }
-
-
-
-
-
             }
             else if(this.name.equals("8"))
             {
-                Log.d("Карты89", "" + cards.get(i % cards.size()));
                 while(params.leftMargin < position)
                 {
                     params.leftMargin += (int) TypedValue.applyDimension(
@@ -457,12 +618,9 @@ public class DeskSelection extends AppCompatActivity {
             }
             else
             {
-                Log.d("Карты89", "" + cards.get(i % cards.size()));
                 int originParams = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, params.leftMargin, getResources().getDisplayMetrics());
-
                 int cnt = 0;
-
                 while(params.leftMargin < position)
                 {
                     params.leftMargin += (int) TypedValue.applyDimension(
@@ -470,16 +628,13 @@ public class DeskSelection extends AppCompatActivity {
                     params.rightMargin
                             -= (int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
-
                     try {
                         Thread.sleep(5);
                     } catch (InterruptedException e){}
                     update(iv, params, true);
                 }
             }
-
         }
-
     }
     class ThreadLeft implements Runnable
     {
@@ -542,11 +697,26 @@ public class DeskSelection extends AppCompatActivity {
             {
                 params.leftMargin = p.x;
                 params.rightMargin = -iv.getWidth();
-                params.bottomMargin = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 52, getResources().getDisplayMetrics());
-                params.topMargin = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics());
-                Log.d("Карты89", "" + cards.get(i % cards.size()));
+
+                if(params.topMargin == (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics()) || params.topMargin == (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics()) ||
+                        params.topMargin == 329 || params.topMargin == 32){Log.d("*", "Работает");}
+                else if(cards.contains(iv)) {
+                    params.bottomMargin = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 52, getResources().getDisplayMetrics());
+                    params.topMargin = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics());
+                    Log.d("*", "Работает-");
+                }
+                else
+                {
+                    params.bottomMargin = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 251, getResources().getDisplayMetrics());
+                    params.topMargin = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics());
+                    Log.d("*", "Работает3");
+                }
                 while(params.leftMargin > position)
                 {
                     params.leftMargin -= (int) TypedValue.applyDimension(
@@ -576,126 +746,6 @@ public class DeskSelection extends AppCompatActivity {
         }
     }
 }
- /*class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
-{
-
-
-    public MySurfaceView(Context context) {
-        super(context);
-        getHolder().addCallback(this);
-    }
-    void update()
-    {
-
-    }
-
-    @Override
-    public void surfaceCreated(@NonNull SurfaceHolder holder) {
-
-    }
-
-    @Override
-    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-
-    }
-}
-class DrawThread extends Thread {
-    private ImageView c2, c3, c4, c5, c6, c7, c8, c9, c10, b2, b3, b4, b5, b6, b7, b8, b9, b10, d2, d3, d4, d5, d6, d7, d8, d9, d10,
-            h2, h3, h4, h5, h6, h7, h8, h9, h10, s2, s3, s4, s5, s6, s7, s8, s9, s10, sq, hq, dq, cq, sj, dj, hj, cj, ck, dk, hk, sk,
-            sa, da, ha, ca, arrowRight, arrowLeft;
-
-    static int counter = 0;
-    Thread t_4, t_3, t_2, t_1, t0, t1, t2, t3;
-
-
-    private SurfaceHolder surfaceHolder;
-    Bitmap bitmap_4, bitmap_3,  bitmap_2,  bitmap_1,  bitmap0,  bitmap1,  bitmap2, bitmap3;
-    private volatile boolean running = true;
-
-    public DrawThread(Context context, SurfaceHolder surfaceHolder) {
-        this.surfaceHolder = surfaceHolder;
-        for(int i = counter - 3; cnt < 8; i++)
-        {
-            if (i == 50 ) i = 0;
-            else if (i < 0) i = 50 + i + 1;
-            switch (cnt)
-            {
-                case 0:
-                    bitmap_4 = BitmapFactory.decodeResource(context.getResources(),);
-                    t_3 = new Thread (new DeskSelection.ThreadRight(lParams_3, cards.get(i % cards.size())));
-                    Log.d("Пока", "С первым в порядке");
-                    t_3.start();
-
-                    break;
-
-                case 1:
-                    lParams_2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                    t_2 = new Thread (new DeskSelection.ThreadRight(lParams_2, cards.get(i % cards.size())));
-                    Log.d("Пока", "С вторым в порядке");
-                    t_2.start();
-
-                    break;
-                case 2:
-                    lParams_1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                    t_1 = new Thread (new DeskSelection.ThreadRight(lParams_1, cards.get(i % cards.size())));
-                    Log.d("Пока", "С первым в порядке");
-                    t_1.start();
-                    break;
-                case 3:
-                    lParams0 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                    t0 = new Thread (new DeskSelection.ThreadRight(lParams0, cards.get(i % cards.size())));
-                    t0.start();
-                    break;
-                case 4:
-                    lParams1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                    t1 = new Thread (new DeskSelection.ThreadRight(lParams1, cards.get(i % cards.size())));
-                    t1.start();
-                    break;
-                case 5:
-                    lParams2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                    t2 = new Thread (new DeskSelection.ThreadRight(lParams2, cards.get(i % cards.size())));
-                    t2.start();
-                    break;
-                case 6:
-                    lParams3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                    t3 = new Thread (new DeskSelection.ThreadRight(lParams3, cards.get(i % cards.size())));
-                    t3.start();
-                    if (counter == 50) counter = 0;
-                    else counter++;
-                case 7:
-            }
-            cnt++;
-        }
-
-    }
-
-    public void requestStop() {
-        running = false;
-    }
-
-    @Override
-    public void run() {
-        int cnt = 0;
-
-        while (running) {
-            Canvas canvas = surfaceHolder.lockCanvas();
-            if (canvas != null) {
-                try {
-
-                } finally {
-                    surfaceHolder.unlockCanvasAndPost(canvas);
-                }
-            }
-        }
-    }
-}
-
-
 
 /* c2.setOnTouchListener(new View.OnTouchListener() {
         @Override
