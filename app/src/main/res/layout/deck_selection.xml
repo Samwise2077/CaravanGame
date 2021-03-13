@@ -705,7 +705,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="478dp"
         android:layout_marginTop="170dp"
-        android:text="@string/cardsRemain"
+        android:text="Оставшиеся карты: 52"
         android:textColor="#FF4001"
         android:textColorHighlight="#B51F1F"
         android:textColorHint="#120D0D"

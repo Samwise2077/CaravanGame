@@ -78,7 +78,7 @@ public class DeckSelection extends AppCompatActivity{
             if(presence)
             {
                 update("Оставшиеся карты: " + --numberOfRemainingCards);
-                ds.deck.add( iv.getId());
+                deck.add( iv.getId());
                 Log.d("number", "" + numberOfRemainingCards);
                 if(numberOfRemainingCards == 30);
                 {
@@ -86,13 +86,11 @@ public class DeckSelection extends AppCompatActivity{
                 }
             }
             else {
-                if(numberOfRemainingCards == 52) {}
-                else{
+                if(numberOfRemainingCards != 52)
                     update("Оставшиеся карты: " + ++numberOfRemainingCards);
-                }
                 Log.d("number", "" + numberOfRemainingCards);
-                ds.deck.remove(back);
-                if(numberOfRemainingCards == 1)
+                deck.remove((Integer) back.getId());
+                if(numberOfRemainingCards == 23)
                 {
                     btnStartGame.setAlpha(0.2f);
 
@@ -177,6 +175,7 @@ public class DeckSelection extends AppCompatActivity{
                 if(btnStartGame.getAlpha() == 1f) {
                     Intent i = new Intent(DeckSelection.this, Game.class);
                     i.putIntegerArrayListExtra("Array",  deck);
+                    Log.d("arr", deck.toString());
                     startActivity(i);
                 }
                 else{}
