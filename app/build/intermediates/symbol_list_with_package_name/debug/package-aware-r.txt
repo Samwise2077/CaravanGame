@@ -1349,6 +1349,7 @@ drawable avd_hide_password
 drawable avd_show_password
 drawable back
 drawable background
+drawable background2
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
 drawable btn_checkbox_unchecked_mtrl
@@ -1391,6 +1392,7 @@ drawable dk
 drawable dq
 drawable frame
 drawable gg
+drawable green_field
 drawable h10
 drawable h2
 drawable h3
@@ -1709,6 +1711,10 @@ id imageView3
 id imageView4
 id imageView5
 id imageView6
+id imageView7
+id imageView8
+id imageView9
+id imgButton
 id info
 id invisible
 id italic
@@ -1775,6 +1781,7 @@ id pin
 id progress_circular
 id progress_horizontal
 id radio
+id randomize
 id right
 id right_icon
 id right_side
@@ -1861,6 +1868,7 @@ id textView3
 id textView4
 id textView5
 id textView6
+id textView7
 id textView8
 id text_input_end_icon
 id text_input_start_icon

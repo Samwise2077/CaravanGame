@@ -1,20 +1,12 @@
 package com.example.myapplication;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,36 +14,60 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DeckSelection extends AppCompatActivity{
     private ImageView c2, c3, c4, c5, c6, c7, c8, c9, c10, b2, b3, b4, b5, b6, b7, b8, b9, b10, d2, d3, d4, d5, d6, d7, d8, d9, d10,
             h2, h3, h4, h5, h6, h7, h8, h9, h10, s2, s3, s4, s5, s6, s7, s8, s9, s10, sq, hq, dq, cq, sj, dj, hj, cj, ck, dk, hk, sk,
             sa, da, ha, ca, arrowRight, arrowLeft, back;
+    private DeckSelection oc2, oc3, oc4, oc5, oc6, oc7, oc8, oc9, oc10, ob2, ob3, ob4, ob5, ob6, ob7, ob8, ob9, ob10, od2, od3, od4, od5, od6, od7, od8, od9, od10,
+            oh2, oh3, oh4, oh5, oh6, oh7, oh8, oh9, oh10, os2, os3, os4, os5, os6, os7, os8, os9, os10, osq, ohq, odq, ocq, osj, odj, ohj, ocj, ock, odk, ohk, osk,
+            osa, oda, oha, oca;
     private ImageView backc2, backc3, backc4, backc5, backc6, backc7, backc8, backc9, backc10, backb2, backb3, backb4, backb5, backb6,
             backb7, backb8, backb9, backb10, backd2, backd3, backd4, backd5, backd6, backd7, backd8, backd9, backd10,
             backh2, backh3, backh4, backh5, backh6, backh7, backh8, backh9, backh10, backs2, backs3, backs4, backs5, backs6, backs7, backs8,
             backs9, backs10, backsq, backhq, backdq, backcq, backsj, backdj, backhj,backcj, backck, backdk,  backhk, backsk,
             backsa, backda, backha, backca;
     public ArrayList<Integer> deck = new ArrayList<>();
+    public ArrayList<String> names = new ArrayList<>();
+    public ArrayList<Bitmap> deck2 = new ArrayList<>();
     public List<ImageView> cards  = new ArrayList<>();
     public List<ImageView> backs = new ArrayList<>();
+    public List<DeckSelection> objects = new ArrayList<>();
+
+    private int id = 6;
+
     volatile static int counter = 0;
     private ViewGroup mMoveLayout;
     private int mX;
-    private Button btnStartGame, btnStartGame2;
+    private Button btnStartGame, btnStartGame2, randomize;
     private int mY;
     private static int numberOfRemainingCards = 52;
     public List getDeck()
     {
         return deck;
+    }
+    public void init()
+    {
+        oc3.id = R.drawable.c3; oc4.id = R.drawable.c4; oc5.id = R.drawable.c5; oc6.id = R.drawable.c6;
+        oc7.id = R.drawable.c7; oc8.id = R.drawable.c8; oc9.id = R.drawable.c9; oc10.id = R.drawable.c10; od2.id = R.drawable.d2; od3.id = R.drawable.d3; od4.id = R.drawable.d4; od5.id = R.drawable.d5;
+        od6.id = R.drawable.d6; od7.id = R.drawable.d7; od8.id = R.drawable.d8; od9.id = R.drawable.d9; od10.id = R.drawable.d10;
+        oh2.id = R.drawable.h2; oh3.id = R.drawable.h3; oh4.id = R.drawable.h4; oh5.id = R.drawable.h5; oh6.id = R.drawable.h6; oh7.id = R.drawable.h7; oh8.id = R.drawable.h8; oh9.id = R.drawable.h9; oh10.id = R.drawable.h10;
+        os2.id = R.drawable.d2; os3.id = R.drawable.d4; os4.id = R.drawable.d5; os5.id = R.drawable.d6; os6.id = R.drawable.d7; os7.id = R.drawable.d8;
+        os8.id = R.drawable.d8; os9.id = R.drawable.d9; os10.id = R.drawable.d10; osq.id = R.drawable.sq; ohq.id = R.drawable.hq; odq.id = R.drawable.dq;
+        ocq.id = R.drawable.cq; osj.id = R.drawable.sj; odj.id = R.drawable.dj; ohj.id = R.drawable.hj; ocj.id = R.drawable.cj; ock.id = R.drawable.ck;
+        odk.id = R.drawable.dk; ohk.id = R.drawable.hk; osk.id = R.drawable.sk;
+        osa.id = R.drawable.sa; oda.id = R.drawable.da; oha.id = R.drawable.ha; oca.id = R.drawable.ca;
+    }
+    public void getId(ImageView iv)
+    {
+
     }
     class MyOnClickListener implements View.OnClickListener
     {
@@ -67,9 +83,10 @@ public class DeckSelection extends AppCompatActivity{
         @Override
         public void onClick(View v)
         {
-            if(numberOfRemainingCards == 0 && presence) {
+        if(numberOfRemainingCards == 0 && presence) {
                 return;
             }
+
             iv.setVisibility(View.INVISIBLE);
             RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams)  iv.getLayoutParams();
             RelativeLayout.LayoutParams lParams2 = (RelativeLayout.LayoutParams)  back.getLayoutParams();
@@ -77,11 +94,69 @@ public class DeckSelection extends AppCompatActivity{
             ds.update(back, lParams, true);
             if(presence)
             {
-                update("Оставшиеся карты: " + --numberOfRemainingCards);
-                deck.add( iv.getId());
-                Log.d("number", "" + numberOfRemainingCards);
-                if(numberOfRemainingCards == 30);
+                numberOfRemainingCards--;
+                update("Оставшиеся карты: " + numberOfRemainingCards);
+                init();
+
+                deck.add(objects.get(cards.indexOf(iv)).id);
+                String name = "";
+                switch(cards.indexOf(iv) + 1 % 4){
+                    case 0:
+                        name = "c";
+                    case 1:
+                        name = "d";
+                    case 2:
+                        name = "h";
+                    case 3:
+                        name = "s";
+                }
+                switch (cards.indexOf(iv) + 1/ 4)
                 {
+                    case 0:
+                        name += "3";
+                        break;
+                    case 1:
+                        name += "4";
+                        break;
+                    case 2:
+                        name += "5";
+                        break;
+                    case 3:
+                        name = "6";
+                        break;
+                    case 4:
+                        name += "7";
+                        break;
+                    case 5:
+                        name += "8";
+                        break;
+                    case 6:
+                        name += "9";
+                        break;
+                    case 7:
+                        name += "10";
+                        break;
+                    case 8:
+                        name += "j";
+                        break;
+                    case 9:
+                        name += "q";
+                        break;
+                    case 10:
+                        name += "k";
+                        break;
+                    case 11:
+                        name += "a";
+                        break;
+                    case 12:
+                        name += "2";
+                        break;
+                }
+                names.add(name);
+                Log.d("counter = ", "" + counter);
+                if(numberOfRemainingCards == 40);
+                {
+                    Log.d("number555", "" + numberOfRemainingCards);
                     btnStartGame.setAlpha(1f);
                 }
             }
@@ -89,16 +164,16 @@ public class DeckSelection extends AppCompatActivity{
                 if(numberOfRemainingCards != 52)
                     update("Оставшиеся карты: " + ++numberOfRemainingCards);
                 Log.d("number", "" + numberOfRemainingCards);
-                deck.remove((Integer) back.getId());
+                deck.remove((Integer) objects.get(counter).id);
+                names.remove(names.get(counter));
                 if(numberOfRemainingCards == 23)
                 {
                     btnStartGame.setAlpha(0.2f);
-
                 }
             }
         }
     }
-    private TextView cardsRemain ;
+    private TextView cardsRemain;
     int i = 0;
     View.OnClickListener clickListener;
     @Override
@@ -110,6 +185,82 @@ public class DeckSelection extends AppCompatActivity{
         display.getSize(p);
         cardsRemain = findViewById(R.id.cardsRemain);
         btnStartGame = findViewById(R.id.start);
+        randomize = findViewById(R.id.randomize);
+        randomize.setOnClickListener((l) ->{
+            List<Integer> randomCards  = new ArrayList<>();
+            List<String> temp  = new ArrayList<>();
+            for(ImageView iv : cards){
+                randomCards.add(objects.get(cards.indexOf(iv)).id);
+                String name = "";
+                switch(cards.indexOf(iv) + 1 % 4){
+                    case 0:
+                        name = "c";
+                    case 1:
+                        name = "d";
+                    case 2:
+                        name = "h";
+                    case 3:
+                        name = "s";
+                }
+                switch (cards.indexOf(iv) + 1/ 4)
+                {
+                    case 0:
+                        name += "3";
+                        break;
+                    case 1:
+                        name += "4";
+                        break;
+                    case 2:
+                        name += "5";
+                        break;
+                    case 3:
+                        name = "6";
+                        break;
+                    case 4:
+                        name += "7";
+                        break;
+                    case 5:
+                        name += "8";
+                        break;
+                    case 6:
+                        name += "9";
+                        break;
+                    case 7:
+                        name += "10";
+                        break;
+                    case 8:
+                        name += "j";
+                        break;
+                    case 9:
+                        name += "q";
+                        break;
+                    case 10:
+                        name += "k";
+                        break;
+                    case 11:
+                        name += "a";
+                        break;
+                    case 12:
+                        name += "2";
+                        break;
+                }
+                temp.add(name);
+            }
+            List<Integer> indexes  = new ArrayList<>();
+            for(int i = 0; i < randomCards.size(); i++)
+            {
+                indexes.add(i);
+            }
+            Collections.shuffle(indexes);
+            int num = (int) (Math.random() * (cards.size() - 30 + 2)) + 29;
+            for(int i = 0; i < num; i++)
+            {
+                deck.add(randomCards.get(indexes.get(i)));
+                names.add(temp.get(indexes.get(i)));
+            }
+            numberOfRemainingCards = 52 - num;
+            btnStartGame.setAlpha(1f);
+        });
         mMoveLayout = (ViewGroup) findViewById(R.id.move);
         c2 = findViewById(R.id.c2); c3 = findViewById(R.id.c3); c4 = findViewById(R.id.c4); c5 = findViewById(R.id.c5);
         c6 = findViewById(R.id.c6); c7=  findViewById(R.id.c7); c8 = findViewById(R.id.c8); c9 = findViewById(R.id.c9);
@@ -140,8 +291,44 @@ public class DeckSelection extends AppCompatActivity{
         ck = findViewById(R.id.ck);sk = findViewById(R.id.sk);hk = findViewById(R.id.hk);dk = findViewById(R.id.dk);
         dq = findViewById(R.id.dq);hq = findViewById(R.id.hq);sq = findViewById(R.id.sq);cq = findViewById(R.id.cq);
         sj = findViewById(R.id.sj);cj = findViewById(R.id.cj);dj = findViewById(R.id.dj);hj= findViewById(R.id.hj);
+        oc3 = new DeckSelection(); od3 = new DeckSelection(); oc3 = new DeckSelection(); od3 = new DeckSelection(); oh3 = new DeckSelection(); os3 = new DeckSelection(); oc4 = new DeckSelection(); od4 = new DeckSelection();
+        oh4 = new DeckSelection(); os4 = new DeckSelection(); oc5 = new DeckSelection(); od5 = new DeckSelection();
+        oh5 = new DeckSelection(); os5 = new DeckSelection(); oc6 = new DeckSelection(); od6 = new DeckSelection();
+        oh6 = new DeckSelection(); os6 = new DeckSelection(); oc7 = new DeckSelection();
+        od7 = new DeckSelection(); oh7 = new DeckSelection(); os7 = new DeckSelection(); oc8 = new DeckSelection();
+        od8 = new DeckSelection(); oh8 = new DeckSelection(); os8 = new DeckSelection(); oc9 = new DeckSelection();
+        od9 = new DeckSelection(); oh9 = new DeckSelection(); os9 = new DeckSelection(); oc10 = new DeckSelection();
+        od10 = new DeckSelection(); oh10 = new DeckSelection(); os10 = new DeckSelection(); ocj = new DeckSelection();
+        odj = new DeckSelection(); ohj = new DeckSelection(); osj = new DeckSelection(); ocq = new DeckSelection();
+        odq = new DeckSelection(); ohq = new DeckSelection(); osq = new DeckSelection(); ock = new DeckSelection();
+        odk = new DeckSelection(); ohk = new DeckSelection(); osk = new DeckSelection();
+        oca = new DeckSelection(); oda = new DeckSelection(); oha = new DeckSelection(); osa = new DeckSelection();
+        oc2 = new DeckSelection(); od2 = new DeckSelection();oh2 = new DeckSelection(); os2 = new DeckSelection();
         cards = new ArrayList<>(Arrays.asList(c3, d3, h3, s3, c4, d4, h4, s4, c5, d5, h5, s5, c6, d6, h6, s6,
                 c7, d7, h7, s7, c8, d8, h8, s8, c9, d9, h9, s9, c10, d10, h10, s10, cj, dj, hj, sj, cq, dq, hq, sq, ck, dk, hk, sk, ca, da, ha, sa, c2, d2, h2, s2));
+        objects = new ArrayList<>(Arrays.asList(oc3, od3, oh3, os3, oc4, od4, oh4, os4, oc5, od5, oh5, os5, oc6, od6, oh6, os6,
+                oc7, od7, oh7, os7, oc8, od8, oh8, os8, oc9, od9, oh9, os9, oc10, od10, oh10, os10, ocj, odj, ohj, osj, ocq, odq, ohq, osq, ock, odk, ohk, osk, oca, oda, oha, osa, oc2, od2, oh2, os2));
+        for (int i = 0; i < 52; i++){
+            objects.set(i, new DeckSelection());
+        }
+        objects.get(48).id = R.drawable.c2; objects.get(0).id = R.drawable.c3;  objects.get(4).id = R.drawable.c4;  objects.get(7).id = R.drawable.c5;
+         objects.get(11).id = R.drawable.c6;
+        objects.get(15).id = R.drawable.c7;  objects.get(19).id = R.drawable.c8;  objects.get(24).id = R.drawable.c9;  objects.get(28).id = R.drawable.c10;
+        objects.get(49).id = R.drawable.d2; objects.get(1).id = R.drawable.d3;  objects.get(5).id = R.drawable.d4;
+        objects.get(8).id = R.drawable.d5;
+        objects.get(12).id = R.drawable.d6;  objects.get(16).id = R.drawable.d7;  objects.get(20).id = R.drawable.d8;  objects.get(25).id = R.drawable.d9;
+        objects.get(29).id = R.drawable.d10;
+        objects.get(50).id = R.drawable.h2; objects.get(2).id = R.drawable.h3;  objects.get(6).id = R.drawable.h4;  objects.get(9).id = R.drawable.h5;
+        objects.get(13).id = R.drawable.h6;  objects.get(17).id = R.drawable.h7;  objects.get(21).id = R.drawable.h8;  objects.get(26).id = R.drawable.h9;
+        objects.get(30).id = R.drawable.h10;
+        objects.get(51).id = R.drawable.s2; objects.get(3).id = R.drawable.s3;  objects.get(6).id = R.drawable.s4;  objects.get(10).id = R.drawable.s5;  objects.get(14).id = R.drawable.s6;
+        objects.get(18).id = R.drawable.s7;  objects.get(23).id = R.drawable.s8;
+          objects.get(27).id = R.drawable.s9;  objects.get(31).id = R.drawable.s10;  objects.get(39).id = R.drawable.sq;
+        objects.get(38).id = R.drawable.hq;  objects.get(37).id = R.drawable.dq;
+        objects.get(36).id = R.drawable.cq;  objects.get(35).id = R.drawable.sj;  objects.get(33).id = R.drawable.dj;  objects.get(34).id = R.drawable.hj;
+        objects.get(32).id = R.drawable.cj;  objects.get(40).id = R.drawable.ck;
+        objects.get(41).id = R.drawable.dk;  objects.get(42).id = R.drawable.hk;  objects.get(43).id = R.drawable.sk;
+        objects.get(47).id = R.drawable.sa;  objects.get(45).id = R.drawable.da;  objects.get(46).id = R.drawable.ha;  objects.get(44).id = R.drawable.ca;
         backs = new ArrayList<>(Arrays.asList(backc3, backd3, backh3, backs3, backc4, backd4, backh4, backs4, backc5, backd5, backh5, backs5, backc6, backd6, backh6, backs6,
                 backc7, backd7, backh7, backs7, backc8, backd8, backh8, backs8, backc9, backd9, backh9, backs9, backc10, backd10, backh10, backs10, backcj, backdj,
                 backhj, backsj, backcq, backdq, backhq, backsq, backck, backdk, backhk, backsk, backca, backda, backha, backsa, backc2, backd2, backh2, backs2));
@@ -175,10 +362,10 @@ public class DeckSelection extends AppCompatActivity{
                 if(btnStartGame.getAlpha() == 1f) {
                     Intent i = new Intent(DeckSelection.this, Game.class);
                     i.putIntegerArrayListExtra("Array",  deck);
+                    i.putStringArrayListExtra("Names",  names);
                     Log.d("arr", deck.toString());
                     startActivity(i);
                 }
-                else{}
             }
         });
         arrowRight.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +373,7 @@ public class DeckSelection extends AppCompatActivity{
             public void onClick(View v) {
                 MediaPlayer mp=new MediaPlayer();
                 try{
-                    mp.setDataSource("O:/Music/sliding.mp3");
+                    mp.setDataSource("com.example.myapplication.music.sliding");
                     mp.prepare();
                     mp.start();
                 }catch(Exception e){e.printStackTrace();}
@@ -317,6 +504,7 @@ public class DeckSelection extends AppCompatActivity{
 
                              if(counter == 0) counter = 51;
                             else counter--;
+                            Log.d("gg", "counter first = " + counter);
                             break;
                         case 7:
                             lParams4 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -361,7 +549,6 @@ public class DeckSelection extends AppCompatActivity{
                 {
                     Log.d("Карты", "" + i);
                     if ( i < 0 ) i = 52 + i;
-
                     switch (cnt)
                     {
                         case -1:
@@ -468,6 +655,7 @@ public class DeckSelection extends AppCompatActivity{
                             t3.start();
                             if(counter == 51) counter = 0;
                             else counter++;
+                            Log.d("gg", "counter first = " + counter);
                             break;
                         case 7:
                             lParams4 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
@@ -749,24 +937,7 @@ public class DeckSelection extends AppCompatActivity{
 /* c2.setOnTouchListener(new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            final int X = (int) event.getRawX();
-            final int Y = (int) event.getRawY();
-            switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                case MotionEvent.ACTION_DOWN:
-                    RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                    mX = X - lParams.leftMargin;
-                    mY = Y - lParams.topMargin;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                    layoutParams.leftMargin = X - mX;
-                    layoutParams.topMargin = Y - mY;
-                    layoutParams.rightMargin = -250;
-                    layoutParams.bottomMargin = -250;
-                    v.setLayoutParams(layoutParams);
-                    break;
-            }
-            return true;
+
 
         }
         }); */

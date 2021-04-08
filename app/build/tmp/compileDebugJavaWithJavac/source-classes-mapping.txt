@@ -3,6 +3,8 @@ com/example/myapplication/BuildConfig.java
 com/example/myapplication/MainActivity.java
  com.example.myapplication.MainActivity
  com.example.myapplication.MainActivity$1
+ com.example.myapplication.MainActivity$2
+ com.example.myapplication.MainActivity$3
 com/example/myapplication/Game.java
  com.example.myapplication.Game
  com.example.myapplication.Game$MySurfaceView

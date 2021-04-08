@@ -1,7 +1,15 @@
 [
     {
+        "merged": "C:\\Users\\samvi\\AndroidStudioProjects\\MyApplication2\\app\\build\\intermediates\\res\\merged\\debug\\drawable_green_field.png.flat",
+        "source": "C:\\Users\\samvi\\AndroidStudioProjects\\MyApplication2\\app\\src\\main\\res\\drawable\\green_field.png"
+    },
+    {
         "merged": "C:\\Users\\samvi\\AndroidStudioProjects\\MyApplication2\\app\\build\\intermediates\\res\\merged\\debug\\drawable_s5.png.flat",
         "source": "C:\\Users\\samvi\\AndroidStudioProjects\\MyApplication2\\app\\src\\main\\res\\drawable\\s5.png"
+    },
+    {
+        "merged": "C:\\Users\\samvi\\AndroidStudioProjects\\MyApplication2\\app\\build\\intermediates\\res\\merged\\debug\\drawable_background2.png.flat",
+        "source": "C:\\Users\\samvi\\AndroidStudioProjects\\MyApplication2\\app\\src\\main\\res\\drawable\\background2.png"
     },
     {
         "merged": "C:\\Users\\samvi\\AndroidStudioProjects\\MyApplication2\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher_round.png.flat",
