@@ -152,17 +152,13 @@ public class DeckSelection extends AppCompatActivity{
                         break;
                 }
                 names.add(name);
-                Log.d("counter = ", "" + counter);
-                if(numberOfRemainingCards == 40);
                 {
-                    Log.d("number555", "" + numberOfRemainingCards);
                     startGame.setAlpha(1f);
                 }
             }
             else {
                 if(numberOfRemainingCards != 52)
                     update("ОСТАВШИЕСЯ КАРТЫ: " + ++numberOfRemainingCards);
-                Log.d("number", "" + numberOfRemainingCards);
                 deck.remove((Integer) objects.get(counter).id);
                 names.remove(names.get(counter));
                 if(numberOfRemainingCards == 23)
@@ -191,7 +187,6 @@ public class DeckSelection extends AppCompatActivity{
             int cnt = 0;
             for(ImageView iv : cards){
                 randomCards.add(objects.get(cards.indexOf(iv)).id);
-                Log.d("id", cnt + " = " + objects.get(cards.indexOf(iv)).id);
                 cnt++;
                 String name = "";
                 int idx;
@@ -278,8 +273,6 @@ public class DeckSelection extends AppCompatActivity{
                 deck.add(randomCards.get(indexes.get(i)));
                 names.add(temp.get(indexes.get(i)));
             }
-            Log.d("names", names.toString()) ;
-            Log.d("names", deck.toString()) ;
         numberOfRemainingCards = 52 - num;
             update("Оставшиеся карты: " + numberOfRemainingCards);
             startGame.setAlpha(1f);
@@ -363,7 +356,6 @@ public class DeckSelection extends AppCompatActivity{
         backs = new ArrayList<>(Arrays.asList(backc3, backd3, backh3, backs3, backc4, backd4, backh4, backs4, backc5, backd5, backh5, backs5, backc6, backd6, backh6, backs6,
                 backc7, backd7, backh7, backs7, backc8, backd8, backh8, backs8, backc9, backd9, backh9, backs9, backc10, backd10, backh10, backs10, backcj, backdj,
                 backhj, backsj, backcq, backdq, backhq, backsq, backck, backdk, backhk, backsk, backca, backda, backha, backsa, backc2, backd2, backh2, backs2));
-        Log.d("check", "" + cards.contains(sa));
         clickListener = new View.OnClickListener() {
             public void onClick(View v) {
                 cards.get(counter).setVisibility(View.INVISIBLE);
@@ -394,7 +386,6 @@ public class DeckSelection extends AppCompatActivity{
                     Intent i = new Intent(DeckSelection.this, Game.class);
                     i.putIntegerArrayListExtra("Array",  deck);
                     i.putStringArrayListExtra("Names",  names);
-                    Log.d("arr", deck.toString());
                     startActivity(i);
                 }
             }
@@ -408,7 +399,6 @@ public class DeckSelection extends AppCompatActivity{
                     mp.prepare();
                     mp.start();
                 }catch(Exception e){e.printStackTrace();}
-                Log.d("","cards.size = " + cards.size());
                 Thread t0, t1, t2, t3, t_1, t_2, t_3, t_4, t4, t0t, t1t, t2t, t3t, t_1t, t_2t, t_3t, t_4t, t4t;
                 Display display = getWindowManager().getDefaultDisplay();
                 RelativeLayout.LayoutParams lParams1 = new RelativeLayout.LayoutParams(110, 200),
@@ -423,13 +413,11 @@ public class DeckSelection extends AppCompatActivity{
                 int cnt = -1;
                 for(int i = counter - 4; cnt < 8;i++)
                 {
-                    Log.d("Карты", "" + i);
                    if ( i < 0 ) i = 52 + i;
                     switch (cnt)
                     {
                         case -1:
                             lParams_4 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                                Log.d("Карты-1", "" + cards.get(i % cards.size()));
                                 t_4 = new Thread(new ThreadRight(lParams_4, cards.get(i % cards.size()), "-4",
                                         (int) TypedValue.applyDimension(
                                                 TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics())));
@@ -443,7 +431,6 @@ public class DeckSelection extends AppCompatActivity{
 
                         case 0:
                             lParams_3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты", "" + cards.get(i % cards.size()));
                             t_3 = new Thread (new ThreadRight(lParams_3, cards.get(i % cards.size()), "-3",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 117, getResources().getDisplayMetrics())));
@@ -456,7 +443,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 1:
                             lParams_2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты0", "" + cards.get(i % cards.size()));
                             t_2 = new Thread (new ThreadRight(lParams_2, cards.get(i % cards.size()), "-2",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 231, getResources().getDisplayMetrics())));
@@ -469,7 +455,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 2:
                             lParams_1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты1", "" + cards.get(i % cards.size()));
                             t_1 = new Thread (new ThreadRight(lParams_1, cards.get(i % cards.size()), "-1",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 338, getResources().getDisplayMetrics())));
@@ -482,7 +467,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 3:
                             lParams0 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты2", "" + cards.get(i % cards.size()));
 
                             t0 = new Thread (new ThreadRight(lParams0, cards.get(i % cards.size()), "0",
                                     (int) TypedValue.applyDimension(
@@ -496,7 +480,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 4:
                             lParams1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты3", "" + cards.get(i % cards.size()));
                             t1 = new Thread (new ThreadRight(lParams1, cards.get(i % cards.size()), "1",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 563, getResources().getDisplayMetrics())));
@@ -509,7 +492,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 5:
                             lParams2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты5", "" + cards.get(i % cards.size()));
                             t2 = new Thread (new ThreadRight(lParams2, cards.get(i % cards.size()), "2",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 673, getResources().getDisplayMetrics())));
@@ -522,7 +504,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 6:
                             lParams3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты6", "" + cards.get(i % cards.size()));
                             t3 = new Thread (new ThreadRight(lParams3, cards.get(i % cards.size()), "3",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 800, getResources().getDisplayMetrics())));
@@ -535,11 +516,9 @@ public class DeckSelection extends AppCompatActivity{
 
                              if(counter == 0) counter = 51;
                             else counter--;
-                            Log.d("gg", "counter first = " + counter);
                             break;
                         case 7:
                             lParams4 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                                Log.d("Карты7", "" + cards.get(i % cards.size()));
                                 t4 = new Thread(new ThreadRight(lParams4, cards.get(i % cards.size()), "8",
                                         (int) TypedValue.applyDimension(
                                                 TypedValue.COMPLEX_UNIT_DIP, 900, getResources().getDisplayMetrics())));
@@ -563,7 +542,6 @@ public class DeckSelection extends AppCompatActivity{
                     mp.prepare();
                     mp.start();
                 }catch(Exception e){e.printStackTrace();}
-                Log.d("","cards.size = " + cards.size());
                 Thread t0, t1, t2, t3, t_1, t_2, t_3, t_4, t4, t0t, t1t, t2t, t3t, t_1t, t_2t, t_3t, t_4t, t4t;
                 Display display = getWindowManager().getDefaultDisplay();
                 RelativeLayout.LayoutParams lParams1 = new RelativeLayout.LayoutParams(110, 200),
@@ -578,13 +556,11 @@ public class DeckSelection extends AppCompatActivity{
                 int cnt = -1;
                 for(int i = counter - 3; cnt < 9;i++)
                 {
-                    Log.d("Карты", "" + i);
                     if ( i < 0 ) i = 52 + i;
                     switch (cnt)
                     {
                         case -1:
                             lParams_4 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты-1", "" + cards.get(i % cards.size()));
                             t_4 = new Thread (new  ThreadLeft(lParams_4, cards.get(i % cards.size()),"-4",
                                     -cards.get(i % cards.size()).getWidth()));
                             t_4.start();
@@ -595,7 +571,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 0:
                             lParams_3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты", "" + cards.get(i % cards.size()));
                             t_3 = new Thread (new ThreadLeft(lParams_3, cards.get(i % cards.size()), "-3",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics())));
@@ -608,7 +583,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 1:
                             lParams_2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты0", "" + cards.get(i % cards.size()));
                             t_2 = new Thread (new  ThreadLeft(lParams_2, cards.get(i % cards.size()), "-2",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 117, getResources().getDisplayMetrics())));
@@ -621,7 +595,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 2:
                             lParams_1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты1", "" + cards.get(i % cards.size()));
                             t_1 = new Thread (new  ThreadLeft(lParams_1, cards.get(i % cards.size()), "-1",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 231, getResources().getDisplayMetrics())));
@@ -634,7 +607,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 3:
                             lParams0 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты2", "" + cards.get(i % cards.size()));
 
                             t0 = new Thread (new  ThreadLeft(lParams0, cards.get(i % cards.size()), "0",
                                     (int) TypedValue.applyDimension(
@@ -648,7 +620,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 4:
                             lParams1 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты3", "" + cards.get(i % cards.size()));
                             t1 = new Thread (new  ThreadLeft(lParams1, cards.get(i % cards.size()), "1",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 450, getResources().getDisplayMetrics())));
@@ -661,7 +632,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 5:
                             lParams2 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты5", "" + cards.get(i % cards.size()));
                             t2 = new Thread (new  ThreadLeft(lParams2, cards.get(i % cards.size()), "2",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 563, getResources().getDisplayMetrics())));
@@ -674,7 +644,6 @@ public class DeckSelection extends AppCompatActivity{
                             break;
                         case 6:
                             lParams3 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                            Log.d("Карты6", "" + cards.get(i % cards.size()));
                             t3 = new Thread (new ThreadLeft(lParams3, cards.get(i % cards.size()), "3",
                                     (int) TypedValue.applyDimension(
                                             TypedValue.COMPLEX_UNIT_DIP, 673, getResources().getDisplayMetrics())));
@@ -686,11 +655,9 @@ public class DeckSelection extends AppCompatActivity{
                             t3.start();
                             if(counter == 51) counter = 0;
                             else counter++;
-                            Log.d("gg", "counter first = " + counter);
                             break;
                         case 7:
                             lParams4 = (RelativeLayout.LayoutParams) cards.get(i % cards.size()).getLayoutParams();
-                                Log.d("Карты7", "" + cards.get(i % cards.size()));
                                 t4 = new Thread(new  ThreadLeft(lParams4, cards.get(i % cards.size()), "8",
                                         (int) TypedValue.applyDimension(
                                                 TypedValue.COMPLEX_UNIT_DIP, 800, getResources().getDisplayMetrics())));
@@ -783,9 +750,6 @@ public class DeckSelection extends AppCompatActivity{
             {
                 params.leftMargin = - iv.getWidth();
                 params.rightMargin = p.x ;
-                Log.d("*", params.topMargin + " == " + (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics()) + " == " + (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics()));
                 if(params.topMargin == (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics()) || params.topMargin == (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics()) ||
@@ -919,13 +883,12 @@ public class DeckSelection extends AppCompatActivity{
                 if(params.topMargin == (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics()) || params.topMargin == (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics()) ||
-                        params.topMargin == 329 || params.topMargin == 32){Log.d("*", "Работает");}
+                        params.topMargin == 329 || params.topMargin == 32){}
                 else if(cards.contains(iv)) {
                     params.bottomMargin = (int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP, 52, getResources().getDisplayMetrics());
                     params.topMargin = (int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP, 219, getResources().getDisplayMetrics());
-                    Log.d("*", "Работает-");
                 }
                 else
                 {
@@ -933,7 +896,6 @@ public class DeckSelection extends AppCompatActivity{
                             TypedValue.COMPLEX_UNIT_DIP, 251, getResources().getDisplayMetrics());
                     params.topMargin = (int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP, 21, getResources().getDisplayMetrics());
-                    Log.d("*", "Работает3");
                 }
                 while(params.leftMargin > position)
                 {

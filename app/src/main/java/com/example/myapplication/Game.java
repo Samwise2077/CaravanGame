@@ -144,7 +144,6 @@ public class Game extends Activity {
                 display.getSize(p);
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inScaled = false;
-                Log.d("names = ", names.toString());
                 frame1 = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.frame), (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 91, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 115, getResources().getDisplayMetrics()), false);
@@ -189,7 +188,6 @@ public class Game extends Activity {
                             TypedValue.COMPLEX_UNIT_DIP, 315, getResources().getDisplayMetrics());
 
                     hand[i][5] = names.get(index);
-                    Log.d(i + " = ",  hand[i][5] + "");
                     if (i != 7) {
                         hand[i][3] = TypedValue.applyDimension(
                                 TypedValue.COMPLEX_UNIT_DIP, 535 + i * 20, getResources().getDisplayMetrics());
@@ -252,10 +250,10 @@ public class Game extends Activity {
                                     TypedValue.COMPLEX_UNIT_DIP, 25, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
                                     TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics()), new Paint());
                             canvas.drawBitmap(frame5, (int) TypedValue.applyDimension(
-                                    TypedValue.COMPLEX_UNIT_DIP, 270, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
                                     TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics()), new Paint());
                             canvas.drawBitmap(frame6, (int) TypedValue.applyDimension(
-                                    TypedValue.COMPLEX_UNIT_DIP, 515, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP, 545, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
                                     TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics()), new Paint());
                             Rect r = new Rect(1, 78, 89, 89);
 
@@ -360,8 +358,6 @@ public class Game extends Activity {
     }
     private void placeCard() {
                 int size  = (int) fields.get(chosenField)[10][0];
-                Log.d("cnt", "size = " + cnt);
-                Log.d("cnt", "chosenField = " + chosenField);
         fields.get(chosenField)[size][0] = hand[cnt][0];
         hand[cnt][ 0]= null;
         if(chosenField == 2){
@@ -409,7 +405,6 @@ public class Game extends Activity {
                 hand[i][2] = hand[i + 1][2];
                 hand[i][3] = hand[i + 1][3];
                 hand[i][4] = hand[i + 1][4];
-                Log.d( i + " = ", hand[i][5] + "");
 
             }
             hand[numOfCard - 1][1] = -1000f;
@@ -435,7 +430,6 @@ public class Game extends Activity {
 
                 }
             }
-            Log.d("", "looploop");
             for(int i = cnt; i < numOfCard - 1; i++)
             {
                 hand[i][0] = hand[i + 1][0];
@@ -507,7 +501,6 @@ public class Game extends Activity {
                 {
                     if((x >= (float) hand[i][1] && x <= (float) hand[i][3]) && y >= (float) hand[i][2] && y <= (float) hand[0][4])
                     {
-                        Log.d("condition1", "succeeded");
                         hand[i][0] = Bitmap.createScaledBitmap((Bitmap) hand[i][0], (int) TypedValue.applyDimension(
                                 TypedValue.COMPLEX_UNIT_DIP, 105, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
                                 TypedValue.COMPLEX_UNIT_DIP, 130, getResources().getDisplayMetrics()), false);
@@ -550,16 +543,13 @@ public class Game extends Activity {
                         return  true;
                     }
                     else if ((turns >= 0 && turns < 3) && (int)((fields.get(chosenField))[10][0]) == 0) {
-                        Log.d("okay", "ok");
                         placeCard();
                         isOnField = false;
                     }
                     else {
-                        Log.d("condition3", "c");
                         try {
                             String s = hand[cnt][5] + "";
                             String value = s.substring(1, 2);
-                            Log.d("else0", value + " lol");
                             switch(value){
                                     case "k":
 
@@ -635,16 +625,13 @@ public class Game extends Activity {
                                     case "8":
                                 case "1":
                                     case "9":
-                                        Log.d("condition","hhhh");
                                         String previousValue = (String )(fields.get(chosenField)[(int) fields.get(chosenField)[10][0] - 1][5]);
                                         if(s.charAt(0) == previousValue.charAt(0) && (directions[chosenField] != 0)){
                                             placeCard();
-                                            Log.d("condition","hhhh");
 
                                             break;
                                         }
                                         else {
-                                            Log.d("condition","hhhh");
 
                                             int value1, value2;
                                             if(s.charAt(1) == 'a'){
@@ -710,11 +697,9 @@ public class Game extends Activity {
 
                             }
                             catch (Exception exp) {
-                            Log.d("", "haha");
                               chosenField = -1;
                                 for (int i = 0; i < numOfCard; i++) {
                                     try {
-                                        Log.d("else cardChosen", "is being done");
                                         hand[i][0] = Bitmap.createScaledBitmap((Bitmap) hand[i][0], (int) TypedValue.applyDimension(
                                                 TypedValue.COMPLEX_UNIT_DIP, 91, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
                                                 TypedValue.COMPLEX_UNIT_DIP, 115, getResources().getDisplayMetrics()), false );
@@ -734,7 +719,6 @@ public class Game extends Activity {
                 } else if (cardChosen) {
                     for (int i = 0; i < numOfCard; i++) {
                         try {
-                            Log.d("else cardChosen", "is being done");
                             hand[i][0] = Bitmap.createScaledBitmap((Bitmap) hand[i][0], (int) TypedValue.applyDimension(
                                     TypedValue.COMPLEX_UNIT_DIP, 91, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(
                                     TypedValue.COMPLEX_UNIT_DIP, 115, getResources().getDisplayMetrics()), false );
@@ -754,7 +738,6 @@ public class Game extends Activity {
                     break;
                 }
                 for (int i = 0; i < numOfCard; i++) {
-                    Log.d("for", "is being done");
                     int border = i < 7 ? 535 + i * 20 : 746;
                     if ((x >= (int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP, 515 + i * 20, getResources().getDisplayMetrics()) && x <= (int) TypedValue.applyDimension(
@@ -999,14 +982,12 @@ public class Game extends Activity {
                             isFirstTime = true;
                             isOnPreviousCard = true;
                             fromLeft = true;
-                            Log.d("","left");
 
                         } else if (i < numOfCard - 1 && ((Bitmap) hand[i + 1][0]).getHeight() == (int) TypedValue.applyDimension(
                                                                TypedValue.COMPLEX_UNIT_DIP, 130, getResources().getDisplayMetrics())) {
                            isFirstTime = true;
                             isOnPreviousCard = true;
                             fromRight = true;
-                            Log.d("","right");
 
                         }
                         previousX = e.getX();
